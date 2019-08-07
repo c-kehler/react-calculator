@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Results from "./Components/results.js";
+import Button from "./Components/buttonPad";
+import * as math from "mathjs";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+let tempString = "";
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      input: 0
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange = e => {
+    // this.setState({ input: e.target.value })
+    // this.setState(prevState => ({
+    //   expressionArray: [...prevState.input, this.state.input]
+
+    tempString += e.target.value;
+    this.setState({ input: tempString });
+    console.log(tempString);
+  };
+
+  handleEquals = e => {
+    let answer = math.evaluate(tempString);
+    this.setState(prevState => ({
+      input: math.round(answer, 5)
+    }));
+  };
+
+  handleClear = e => {
+    this.setState({ input: 0 });
+    tempString = "";
+  };
+
+  render() {
+    return (
+      <div class="calculator">
+        <Results display={this.state.input} />
+        <Button
+          handleChange={this.handleChange}
+          handleEquals={this.handleEquals}
+          handleClear={this.handleClear}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;
